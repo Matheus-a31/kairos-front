@@ -1,6 +1,8 @@
 # Kairós - Frontend
 
-Este é o frontend da aplicação Kairós, construído utilizando **Angular 18** e **Angular Material**.
+O **Kairós** é uma plataforma moderna e intuitiva de gerenciamento de projetos e tarefas baseada no modelo Kanban (semelhante ao Trello ou Jira). O sistema permite aos usuários criar projetos, convidar membros da equipe com diferentes níveis de acesso (Gerente, Desenvolvedor, Visualizador), organizar tarefas em colunas customizáveis, adicionar tags, definir prioridades e prazos, além de gerenciar todo o fluxo de trabalho de forma colaborativa e ágil.
+
+Este é o frontend da aplicação, construído utilizando **Angular 18** e **Angular Material**, oferecendo uma interface reativa, componentes modulares e uma excelente experiência de usuário.
 
 ## Pré-requisitos
 
