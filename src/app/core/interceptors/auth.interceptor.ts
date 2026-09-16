@@ -4,16 +4,27 @@ import { Router } from '@angular/router';
 import { catchError, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
+import { environment } from '../../../environments/environment';
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const router = inject(Router);
   
   const token = authService.getToken();
   
-  // Clone the request and attach the token if it exists and request is going to API
   let authReq = req;
-  if (token && req.url.startsWith('/api')) {
+  
+  // Prepend API URL
+  if (req.url.startsWith('/api')) {
+    const baseUrl = environment.apiUrl || '';
     authReq = req.clone({
+      url: `${baseUrl}${req.url}`
+    });
+  }
+
+  // Attach token
+  if (token && authReq.url.includes('/api')) {
+    authReq = authReq.clone({
       setHeaders: { Authorization: `Bearer ${token}` }
     });
   }
