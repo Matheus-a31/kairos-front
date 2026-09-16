@@ -102,6 +102,10 @@ export class ProjectInviteComponent implements OnInit {
       next: (res: any) => {
         this.invite = res;
         this.isLoading = false;
+        
+        if (this.isLoggedIn) {
+          this.acceptInvite();
+        }
       },
       error: (err: any) => {
         this.error = err.error?.message || 'Convite inválido ou expirado.';

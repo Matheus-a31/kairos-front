@@ -51,11 +51,23 @@ export class RegisterComponent {
 
     this.authService.register(this.registerForm.value).subscribe({
       next: () => {
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-        const queryParams: any = { registered: true };
-        if (returnUrl) queryParams.returnUrl = returnUrl;
-        
-        this.router.navigate(['/login'], { queryParams });
+        this.authService.login({ email: this.registerForm.value.email, password: this.registerForm.value.password }).subscribe({
+          next: () => {
+            const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+            if (returnUrl) {
+              this.router.navigateByUrl(returnUrl);
+            } else {
+              this.router.navigate(['/']);
+            }
+          },
+          error: () => {
+            const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+            const queryParams: any = { registered: true };
+            if (returnUrl) queryParams.returnUrl = returnUrl;
+            
+            this.router.navigate(['/login'], { queryParams });
+          }
+        });
       },
       error: (err) => {
         this.isLoading = false;
