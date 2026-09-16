@@ -1,0 +1,74 @@
+<h2 mat-dialog-title>{{ isEditMode ? 'Editar Tarefa' : 'Nova Tarefa' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="taskForm" class="task-form">
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title" placeholder="Nome da tarefa">
+      <mat-error *ngIf="taskForm.get('title')?.hasError('required')">Título é obrigatório</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput formControlName="description" rows="3" placeholder="Detalhes da tarefa"></textarea>
+    </mat-form-field>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Prioridade</mat-label>
+        <mat-select formControlName="priority">
+          <mat-option value="LOW">Baixa</mat-option>
+          <mat-option value="MEDIUM">Média</mat-option>
+          <mat-option value="HIGH">Alta</mat-option>
+          <mat-option value="URGENT">Urgente</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width" *ngIf="isEditMode">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option value="TODO">A Fazer</mat-option>
+          <mat-option value="IN_PROGRESS">Em Andamento</mat-option>
+          <mat-option value="DONE">Concluído</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Responsável</mat-label>
+        <mat-select formControlName="assigneeId">
+          <mat-option [value]="null">Não atribuído</mat-option>
+          <mat-option *ngFor="let member of members" [value]="member.userId">
+            {{ member.userName }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Data Limite (Due Date)</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="dueDate">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tags</mat-label>
+      <mat-select formControlName="tagIds" multiple>
+        <mat-option *ngFor="let tag of tags" [value]="tag.id">
+          <span [style.color]="tag.color">{{ tag.name }}</span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isLoading">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="onSubmit()" [disabled]="taskForm.invalid || isLoading">
+    {{ isLoading ? 'Salvando...' : 'Salvar' }}
+  </button>
+</mat-dialog-actions>

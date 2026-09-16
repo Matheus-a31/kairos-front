@@ -1,0 +1,62 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #2563EB;
+  --primary-dark: #1D4ED8;
+  --background: #F8FAFC;
+  --surface: #FFFFFF;
+  --text: #0F172A;
+  --secondary-text: #64748B;
+  --success: #16A34A;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --border: #E2E8F0;
+
+  --font-family: 'Inter', sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--background);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Material Overrides */
+.mat-mdc-button, .mat-mdc-raised-button, .mat-mdc-outlined-button {
+  font-family: var(--font-family) !important;
+  letter-spacing: normal !important;
+  border-radius: 6px !important;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-text-field-wrapper {
+  background-color: var(--surface) !important;
+}
+
+/* Typography Hierarchy */
+h1 { font-size: 32px; font-weight: 700; margin-bottom: 16px; color: var(--text); }
+h2 { font-size: 24px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+p { font-size: 14px; margin-bottom: 16px; color: var(--secondary-text); }
+.caption { font-size: 12px; color: var(--secondary-text); }
+
+/* Common Layout Utils */
+.full-width { width: 100%; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

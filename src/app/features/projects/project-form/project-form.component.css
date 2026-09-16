@@ -1,0 +1,14 @@
+.project-form {
+  display: flex;
+  flex-direction: column;
+  padding-top: 16px;
+}
+
+.dates-row {
+  display: flex;
+  gap: 16px;
+}
+
+.half-width {
+  flex: 1;
+}

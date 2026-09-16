@@ -1,0 +1,84 @@
+<div class="page-container">
+  <div class="page-header flex-center" style="justify-content: space-between; margin-bottom: 24px;">
+    <div>
+      <h1>Projetos</h1>
+      <p>Gerencie todos os seus projetos ativos e inativos.</p>
+    </div>
+    <button mat-flat-button color="primary" (click)="openCreateDialog()">
+      <mat-icon>add</mat-icon> Novo Projeto
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="search-bar" style="margin-bottom: 16px;">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Buscar projetos</mat-label>
+        <input matInput type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Digite o nome do projeto">
+        <button matSuffix mat-icon-button (click)="onSearch()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <table mat-table [dataSource]="projects" class="mat-elevation-z0 full-width">
+      
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let project"> 
+          <strong>{{project.name}}</strong>
+          <div class="caption">{{project.description}}</div>
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let project"> 
+          <span class="status-badge" [ngClass]="project.status.toLowerCase()">
+            {{project.status}}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Start Date Column -->
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef> Início </th>
+        <td mat-cell *matCellDef="let project"> {{project.startDate | date:'shortDate'}} </td>
+      </ng-container>
+
+      <!-- End Date Column -->
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef> Conclusão </th>
+        <td mat-cell *matCellDef="let project"> {{project.endDate | date:'shortDate'}} </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let project">
+          <button mat-icon-button color="primary" [routerLink]="['/projects', project.id]">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+      <!-- No data row -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="5" style="text-align: center; padding: 24px;">
+          Nenhum projeto encontrado.
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator [length]="totalElements"
+                   [pageSize]="pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]"
+                   (page)="onPageChange($event)"
+                   aria-label="Selecione a página">
+    </mat-paginator>
+  </div>
+</div>

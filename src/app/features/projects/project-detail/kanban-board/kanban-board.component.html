@@ -1,0 +1,66 @@
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 8px;">
+  <mat-form-field appearance="outline" style="width: 300px; margin-bottom: -1.25em;">
+    <mat-label>Pesquisar tarefas</mat-label>
+    <input matInput type="text" placeholder="Ex: Backend" (keyup)="onSearch($event)">
+    <mat-icon matSuffix>search</mat-icon>
+  </mat-form-field>
+  <div style="display:flex;gap:8px;">
+    <button mat-stroked-button (click)="openColumnDialog()" matTooltip="Adicionar nova coluna">
+      <mat-icon>view_column</mat-icon> Nova Coluna
+    </button>
+    <button mat-flat-button color="primary" (click)="openTaskDialog()">
+      <mat-icon>add</mat-icon> Nova Tarefa
+    </button>
+  </div>
+</div>
+
+<div class="board">
+  @for (column of columns; track column.id) {
+    <div class="column">
+      <div class="column-header" [style.border-top-color]="column.color">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <h2>
+            <span class="column-dot" [style.background-color]="column.color"></span>
+            {{ column.name }} ({{ column.tasks.length }})
+          </h2>
+          <div style="display:flex;gap:4px;">
+            <button mat-icon-button (click)="openColumnDialog(column)" matTooltip="Editar coluna" style="width:28px;height:28px;line-height:28px;">
+              <mat-icon style="font-size:16px;">edit</mat-icon>
+            </button>
+            @if (!column.isDefault) {
+              <button mat-icon-button color="warn" (click)="deleteColumn(column)" matTooltip="Excluir coluna" style="width:28px;height:28px;line-height:28px;">
+                <mat-icon style="font-size:16px;">delete</mat-icon>
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div
+        [id]="'col-' + column.id"
+        cdkDropList
+        [cdkDropListData]="column.tasks"
+        [cdkDropListConnectedTo]="columnIds"
+        class="task-list"
+        (cdkDropListDropped)="drop($event, column)">
+
+        <mat-card class="task-card" *ngFor="let task of column.tasks" cdkDrag (click)="openTaskDialog(task)">
+          <mat-card-header>
+            <mat-card-title>{{ task.title }}</mat-card-title>
+            <mat-card-subtitle>{{ task.assigneeName || 'Não atribuído' }}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="card-meta">
+              <span class="priority-badge" [ngClass]="task.priority.toLowerCase()">{{ task.priority }}</span>
+              <span class="due-date" *ngIf="task.dueDate">📅 {{ task.dueDate | date:'dd/MM' }}</span>
+            </div>
+            <div class="tag-list" *ngIf="task.tags && task.tags.length > 0">
+              <span class="tag-chip" *ngFor="let tag of task.tags" [style.background-color]="tag.color" [style.color]="getContrastColor(tag.color)">{{ tag.name }}</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,34 @@
+.page-container {
+  padding: 24px;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.planning {
+  background-color: #E0E7FF;
+  color: #4338CA;
+}
+
+.status-badge.in_progress {
+  background-color: #FEF3C7;
+  color: #B45309;
+}
+
+.status-badge.completed {
+  background-color: #DCFCE7;
+  color: #15803D;
+}
+
+.status-badge.cancelled {
+  background-color: #FEE2E2;
+  color: #B91C1C;
+}
+
+table {
+  margin-bottom: 16px;
+}

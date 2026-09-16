@@ -1,0 +1,41 @@
+<div class="auth-container flex-center">
+  <mat-card class="auth-card card">
+    
+    <div class="auth-header">
+      <h1 class="logo">Kairós</h1>
+      <h2>Bem-vindo de volta</h2>
+      <p>Insira suas credenciais para acessar seus projetos.</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>E-mail</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="seu@email.com">
+        <mat-error *ngIf="loginForm.get('email')?.hasError('required')">E-mail é obrigatório</mat-error>
+        <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Formato de e-mail inválido</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Sua senha">
+        <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Senha é obrigatória</mat-error>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" class="full-width submit-btn" type="submit" [disabled]="loginForm.invalid || isLoading">
+        <span *ngIf="!isLoading">Entrar</span>
+        <mat-spinner *ngIf="isLoading" diameter="20" color="accent"></mat-spinner>
+      </button>
+
+    </form>
+
+    <div class="auth-footer">
+      <p>Não tem uma conta? <a routerLink="/auth/register">Crie agora</a></p>
+    </div>
+
+  </mat-card>
+</div>

@@ -1,0 +1,27 @@
+.page-container {
+  padding: 24px;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.status-badge.planning { background-color: #E0E7FF; color: #4338CA; }
+.status-badge.in_progress { background-color: #FEF3C7; color: #B45309; }
+.status-badge.completed { background-color: #DCFCE7; color: #15803D; }
+.status-badge.cancelled { background-color: #FEE2E2; color: #B91C1C; }
+
+.role-badge {
+  background-color: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
