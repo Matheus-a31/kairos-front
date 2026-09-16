@@ -83,7 +83,7 @@ export class ProjectInviteComponent implements OnInit {
   ) {}
 
   get isLoggedIn(): boolean {
-    return this.authService.isLoggedIn();
+    return this.authService.isAuthenticated();
   }
 
   ngOnInit(): void {
