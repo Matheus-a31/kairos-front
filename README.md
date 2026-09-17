@@ -53,3 +53,7 @@ O frontend foi desenvolvido com uma arquitetura modular focada por recursos (*Fe
   - **projects/**: Listagem, Detalhes, Configurações de Projeto, e Convites.
   - **dashboard/**: Tela inicial do usuário logado.
 - **shared/**: Componentes compartilhados genéricos (não ligados a um domínio específico).
+
+## Licença
+
+Este projeto está licenciado sob a [GNU General Public License v3.0] (LICENSE).
