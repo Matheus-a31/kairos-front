@@ -1,84 +1,78 @@
 <div class="page-container">
-  <div class="page-header flex-center" style="justify-content: space-between; margin-bottom: 24px;">
+  <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
     <div>
-      <h1>Projetos</h1>
-      <p>Gerencie todos os seus projetos ativos e inativos.</p>
+      <h1 style="font-size: 2.5rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; font-family: 'Inter', sans-serif;">Meus Projetos</h1>
+      <p style="color: #64748b; font-size: 1rem; margin: 0;">Gerencie todos os seus projetos ativos e inativos.</p>
     </div>
-    <button mat-flat-button color="primary" (click)="openCreateDialog()">
-      <mat-icon>add</mat-icon> Novo Projeto
-    </button>
+    <div style="display: flex; gap: 16px; align-items: center;">
+      <app-notification-bell></app-notification-bell>
+      <button mat-flat-button color="primary" (click)="openCreateDialog()" style="padding: 8px 24px; border-radius: 8px; font-weight: 600;">
+        <mat-icon>add</mat-icon> Novo Projeto
+      </button>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="search-bar" style="margin-bottom: 16px;">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Buscar projetos</mat-label>
-        <input matInput type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Digite o nome do projeto">
-        <button matSuffix mat-icon-button (click)="onSearch()">
-          <mat-icon>search</mat-icon>
-        </button>
-      </mat-form-field>
-    </div>
-
-    <table mat-table [dataSource]="projects" class="mat-elevation-z0 full-width">
-      
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Nome </th>
-        <td mat-cell *matCellDef="let project"> 
-          <strong>{{project.name}}</strong>
-          <div class="caption">{{project.description}}</div>
-        </td>
-      </ng-container>
-
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef> Status </th>
-        <td mat-cell *matCellDef="let project"> 
-          <span class="status-badge" [ngClass]="project.status.toLowerCase()">
-            {{project.status}}
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Start Date Column -->
-      <ng-container matColumnDef="startDate">
-        <th mat-header-cell *matHeaderCellDef> Início </th>
-        <td mat-cell *matCellDef="let project"> {{project.startDate | date:'shortDate'}} </td>
-      </ng-container>
-
-      <!-- End Date Column -->
-      <ng-container matColumnDef="endDate">
-        <th mat-header-cell *matHeaderCellDef> Conclusão </th>
-        <td mat-cell *matCellDef="let project"> {{project.endDate | date:'shortDate'}} </td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef> Ações </th>
-        <td mat-cell *matCellDef="let project">
-          <button mat-icon-button color="primary" [routerLink]="['/projects', project.id]">
-            <mat-icon>visibility</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      
-      <!-- No data row -->
-      <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="5" style="text-align: center; padding: 24px;">
-          Nenhum projeto encontrado.
-        </td>
-      </tr>
-    </table>
-
-    <mat-paginator [length]="totalElements"
-                   [pageSize]="pageSize"
-                   [pageSizeOptions]="[5, 10, 25, 100]"
-                   (page)="onPageChange($event)"
-                   aria-label="Selecione a página">
-    </mat-paginator>
+  <div class="search-bar" style="margin-bottom: 24px; max-width: 400px;">
+    <mat-form-field appearance="outline" class="full-width" style="width: 100%;">
+      <mat-label>Buscar projetos</mat-label>
+      <input matInput type="text" [(ngModel)]="searchQuery" (keyup.enter)="onSearch()" placeholder="Digite o nome do projeto">
+      <button matSuffix mat-icon-button (click)="onSearch()">
+        <mat-icon>search</mat-icon>
+      </button>
+    </mat-form-field>
   </div>
+
+  @if (projects.length === 0) {
+    <div style="text-align: center; padding: 64px 24px; background: white; border-radius: 16px; border: 1px dashed #cbd5e1;">
+      <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: #94a3b8; margin-bottom: 16px;">folder_open</mat-icon>
+      <h2 style="color: #475569; margin-bottom: 8px;">Nenhum projeto encontrado</h2>
+      <p style="color: #64748b; margin-bottom: 24px;">Você ainda não possui projetos com esse nome ou a lista está vazia.</p>
+      <button mat-flat-button color="primary" (click)="openCreateDialog()">Criar meu primeiro projeto</button>
+    </div>
+  } @else {
+    <div class="project-grid">
+      @for (project of projects; track project.id) {
+        <mat-card class="project-card mat-elevation-z2" [routerLink]="['/projects', project.id]">
+          <div class="card-color-strip" [style.backgroundColor]="project.backgroundColor || '#6366f1'"></div>
+          <mat-card-header style="padding: 20px 20px 0 20px; display: flex; justify-content: space-between; width: 100%; box-sizing: border-box;">
+            <div style="flex: 1;">
+              <mat-card-title style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                {{ project.name }}
+                <span class="status-badge" [ngClass]="project.status.toLowerCase()">{{ project.status }}</span>
+              </mat-card-title>
+              <mat-card-subtitle style="color: #64748b; font-size: 0.9rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px; min-height: 2.8em;">
+                {{ project.description || 'Sem descrição' }}
+              </mat-card-subtitle>
+            </div>
+          </mat-card-header>
+          
+          <mat-card-content style="padding: 0 20px 20px 20px; flex: 1; display: flex; flex-direction: column; justify-content: flex-end;">
+            <div style="display: flex; justify-content: space-between; color: #64748b; font-size: 0.85rem; background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #94a3b8;">event</mat-icon>
+                <span><strong>{{ project.startDate | date:'dd/MM/yy' }}</strong></span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <mat-icon style="font-size: 16px; width: 16px; height: 16px; color: #94a3b8;">flag</mat-icon>
+                <span><strong>{{ project.endDate | date:'dd/MM/yy' }}</strong></span>
+              </div>
+            </div>
+          </mat-card-content>
+          
+          <div class="card-overlay-action">
+            Acessar Projeto <mat-icon>arrow_forward</mat-icon>
+          </div>
+        </mat-card>
+      }
+    </div>
+    
+    <div style="margin-top: 24px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+      <mat-paginator [length]="totalElements"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="[6, 12, 24, 48]"
+                     (page)="onPageChange($event)"
+                     aria-label="Selecione a página">
+      </mat-paginator>
+    </div>
+  }
 </div>
