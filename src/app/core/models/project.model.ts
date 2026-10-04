@@ -5,6 +5,7 @@ export interface Project {
   status: 'PLANNING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
   startDate: string;
   endDate: string;
+  backgroundColor?: string;
 }
 
 export interface ProjectRequest {
@@ -13,6 +14,7 @@ export interface ProjectRequest {
   startDate?: string;
   endDate?: string;
   status?: string;
+  backgroundColor?: string;
 }
 
 export interface PaginatedResponse<T> {

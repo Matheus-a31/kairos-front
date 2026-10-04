@@ -10,8 +10,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatCardModule } from '@angular/material/card';
 import { FormsModule } from '@angular/forms';
 import { ProjectFormComponent } from '../project-form/project-form.component';
+import { NotificationBellComponent } from '../../../shared/components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-project-list',
@@ -25,6 +27,8 @@ import { ProjectFormComponent } from '../project-form/project-form.component';
     MatIconModule,
     MatInputModule,
     MatDialogModule,
+    MatCardModule,
+    NotificationBellComponent,
     FormsModule
   ],
   templateUrl: './project-list.component.html',
@@ -35,7 +39,7 @@ export class ProjectListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'status', 'startDate', 'endDate', 'actions'];
   
   totalElements = 0;
-  pageSize = 10;
+  pageSize = 12;
   pageIndex = 0;
   searchQuery = '';
 

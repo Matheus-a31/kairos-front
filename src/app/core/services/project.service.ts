@@ -35,6 +35,10 @@ export class ProjectService {
     return this.http.put<Project>(`${this.apiUrl}/${id}`, project);
   }
 
+  updateProjectBackground(id: number, backgroundColor: string): Observable<Project> {
+    return this.http.put<Project>(`${this.apiUrl}/${id}/background`, { backgroundColor });
+  }
+
   deleteProject(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

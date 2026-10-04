@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TaskService } from '../../../../core/services/task.service';
@@ -43,7 +43,7 @@ interface KanbanColumn {
   templateUrl: './kanban-board.component.html',
   styleUrl: './kanban-board.component.css'
 })
-export class KanbanBoardComponent implements OnInit {
+export class KanbanBoardComponent implements OnInit, OnChanges {
   @Input() projectId!: number;
 
   columns: KanbanColumn[] = [];
@@ -74,6 +74,14 @@ export class KanbanBoardComponent implements OnInit {
   ngOnInit(): void {
     if (this.projectId) {
       this.loadColumnsAndTasks();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['projectId'] && !changes['projectId'].isFirstChange()) {
+      if (this.projectId) {
+        this.loadColumnsAndTasks();
+      }
     }
   }
 
@@ -197,5 +205,14 @@ export class KanbanBoardComponent implements OnInit {
         }
       });
     }
+  }
+
+  onColumnColorChange(event: Event, column: KanbanColumn) {
+    const input = event.target as HTMLInputElement;
+    const newColor = input.value;
+    column.color = newColor; // optimistic update
+    this.projectService.updateColumn(this.projectId, column.id, { color: newColor }).subscribe({
+      error: () => this.snackBar.open('Erro ao atualizar cor', 'Ok', { duration: 3000 })
+    });
   }
 }
