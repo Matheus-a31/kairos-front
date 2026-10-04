@@ -15,6 +15,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MemberInviteDialogComponent } from './member-invite-dialog/member-invite-dialog.component';
 import { KanbanBoardComponent } from './kanban-board/kanban-board.component';
 import { ProjectFormComponent } from '../project-form/project-form.component';
+import { NotificationBellComponent } from '../../../shared/components/notification-bell/notification-bell.component';
 
 @Component({
   selector: 'app-project-detail',
@@ -28,6 +29,7 @@ import { ProjectFormComponent } from '../project-form/project-form.component';
     MatIconModule,
     MatTableModule,
     MatDialogModule,
+    NotificationBellComponent,
     KanbanBoardComponent
   ],
   templateUrl: './project-detail.component.html',
@@ -105,5 +107,15 @@ export class ProjectDetailComponent implements OnInit {
         error: (err: any) => alert(err.error?.message || 'Erro ao remover membro')
       });
     }
+  }
+
+  onBoardColorChange(event: Event) {
+    if (!this.project) return;
+    const input = event.target as HTMLInputElement;
+    const newColor = input.value;
+    this.project.backgroundColor = newColor; // optimistic update
+    this.projectService.updateProjectBackground(this.project.id, newColor).subscribe({
+      error: () => alert('Erro ao atualizar a cor de fundo')
+    });
   }
 }
