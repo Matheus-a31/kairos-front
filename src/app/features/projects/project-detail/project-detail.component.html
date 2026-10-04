@@ -1,22 +1,25 @@
-<div class="page-container" *ngIf="project">
+<div class="page-container" *ngIf="project" style="max-width: 1400px; margin: 0 auto; padding: 32px;">
   
-  <div class="page-header" style="margin-bottom: 24px;">
-    <button mat-button routerLink="/">
-      <mat-icon>arrow_back</mat-icon> Voltar
+  <div class="page-header" style="margin-bottom: 32px; background: white; padding: 32px; border-radius: 24px; box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05); border: 1px solid #f1f5f9;">
+    <button mat-button routerLink="/" style="margin-bottom: 16px; color: #64748b; border-radius: 8px;">
+      <mat-icon>arrow_back</mat-icon> Voltar para Projetos
     </button>
-    <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: flex-start;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
       <div>
-        <h1>{{ project.name }}</h1>
-        <p>{{ project.description }}</p>
-        <span class="status-badge" [ngClass]="project.status.toLowerCase()">{{ project.status }}</span>
+        <h1 style="font-size: 2.2rem; font-weight: 800; color: #1e293b; margin-bottom: 8px; font-family: 'Inter', sans-serif;">{{ project.name }}</h1>
+        <p style="color: #64748b; font-size: 1.1rem; max-width: 600px; line-height: 1.5; margin-bottom: 16px;">{{ project.description || 'Sem descrição' }}</p>
+        <span class="status-badge" [ngClass]="project.status.toLowerCase()" style="padding: 6px 12px; border-radius: 99px; font-weight: 600; font-size: 0.8rem;">{{ project.status }}</span>
       </div>
-      <button mat-stroked-button (click)="openEditDialog()" style="margin-top: 8px;">
-        <mat-icon>edit</mat-icon> Editar Projeto
-      </button>
+      <div style="display: flex; gap: 16px; align-items: center;">
+        <app-notification-bell></app-notification-bell>
+        <button mat-flat-button color="primary" (click)="openEditDialog()" style="padding: 8px 24px; border-radius: 12px; font-weight: 600; box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);">
+          <mat-icon>edit</mat-icon> Editar Projeto
+        </button>
+      </div>
     </div>
   </div>
 
-  <mat-card class="mat-elevation-z1">
+  <mat-card class="mat-elevation-z2" style="border-radius: 24px; overflow: hidden; border: 1px solid #f1f5f9;">
     <mat-tab-group animationDuration="0ms">
       
       <!-- Visão Geral -->
@@ -31,7 +34,13 @@
 
       <!-- Quadro Kanban -->
       <mat-tab label="Quadro Kanban">
-        <div style="padding: 24px;">
+        <div style="padding: 24px; transition: background-color 0.3s;" [style.background-color]="project.backgroundColor || '#EBECF0'">
+          <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; background: white; padding: 4px 8px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">
+              <mat-icon>palette</mat-icon> Cor do Fundo do Kanban
+              <input type="color" [value]="project.backgroundColor || '#EBECF0'" (change)="onBoardColorChange($event)" style="width: 24px; height: 24px; border: none; padding: 0;">
+            </label>
+          </div>
           <app-kanban-board [projectId]="project.id"></app-kanban-board>
         </div>
       </mat-tab>
