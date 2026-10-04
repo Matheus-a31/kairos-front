@@ -20,7 +20,10 @@
     <div class="column-header" [style.border-top-color]="column.color">
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <h2>
-          <span class="column-dot" [style.background-color]="column.color"></span>
+          <label style="cursor: pointer; margin-right: 8px;" matTooltip="Mudar cor">
+            <span class="column-dot" [style.background-color]="column.color"></span>
+            <input type="color" [value]="column.color || '#64748B'" (change)="onColumnColorChange($event, column)" style="opacity: 0; width: 0; height: 0; position: absolute;">
+          </label>
           {{ column.name }} ({{ column.tasks.length }})
         </h2>
         <div style="display:flex;gap:4px;">
