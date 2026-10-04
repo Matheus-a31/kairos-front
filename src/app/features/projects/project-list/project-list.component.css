@@ -1,34 +1,85 @@
 .page-container {
-  padding: 24px;
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  position: relative;
+  border-radius: 16px !important;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  border-color: #cbd5e1;
+}
+
+.card-color-strip {
+  height: 6px;
+  width: 100%;
+}
+
+.card-overlay-action {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(99, 102, 241, 0.95), rgba(99, 102, 241, 0.8));
+  color: white;
+  padding: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card:hover .card-overlay-action {
+  transform: translateY(0);
 }
 
 .status-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .status-badge.planning {
-  background-color: #E0E7FF;
-  color: #4338CA;
+  background-color: #e0e7ff;
+  color: #4338ca;
 }
 
 .status-badge.in_progress {
-  background-color: #FEF3C7;
-  color: #B45309;
+  background-color: #fef3c7;
+  color: #b45309;
 }
 
 .status-badge.completed {
-  background-color: #DCFCE7;
-  color: #15803D;
+  background-color: #dcfce7;
+  color: #15803d;
 }
 
 .status-badge.cancelled {
-  background-color: #FEE2E2;
-  color: #B91C1C;
-}
-
-table {
-  margin-bottom: 16px;
+  background-color: #fee2e2;
+  color: #b91c1c;
 }
