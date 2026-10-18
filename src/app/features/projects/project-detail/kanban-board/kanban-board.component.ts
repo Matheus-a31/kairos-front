@@ -104,28 +104,49 @@ export class KanbanBoardComponent implements OnInit, OnChanges {
     });
   }
 
+  deduceStatus(column: KanbanColumn): 'TODO' | 'IN_PROGRESS' | 'DONE' {
+    const normalized = (column.name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (normalized.includes('conclu') || normalized.includes('done') || normalized.includes('final')) {
+      return 'DONE';
+    }
+    if (normalized.includes('fazer') || normalized.includes('todo') || normalized.includes('backlog') || normalized.includes('pendente') || column.position === 0) {
+      return 'TODO';
+    }
+    return 'IN_PROGRESS';
+  }
+
   loadTasks() {
     this.taskService.getTasks(this.projectId, this.searchQuery, undefined, undefined, undefined, 0, 100).subscribe({
       next: (res: any) => {
-        const tasks: Task[] = res.content;
+        const tasks: Task[] = res.content || [];
         // Reset tasks in each column
         this.columns.forEach(c => c.tasks = []);
 
-        // Distribute tasks to columns by kanban_column_id if available, else by status
-        const statusToColIndex: Record<string, number> = { 'TODO': 0, 'IN_PROGRESS': 1, 'DONE': 2 };
-        tasks.forEach((task: any) => {
+        // Distribute tasks to columns by kanbanColumnId if available, else by fallback deduced status
+        tasks.forEach((task: Task) => {
           let placed = false;
           if (task.kanbanColumnId) {
             const col = this.columns.find(c => c.id === task.kanbanColumnId);
-            if (col) { col.tasks.push(task); placed = true; }
+            if (col) {
+              col.tasks.push(task);
+              placed = true;
+            }
           }
-          if (!placed) {
-            const idx = statusToColIndex[task.status] ?? 0;
-            if (this.columns[idx]) this.columns[idx].tasks.push(task);
+          if (!placed && this.columns.length > 0) {
+            if (task.status === 'DONE') {
+              const doneCol = this.columns.find(c => this.deduceStatus(c) === 'DONE') || this.columns[this.columns.length - 1];
+              doneCol.tasks.push(task);
+            } else if (task.status === 'TODO') {
+              const todoCol = this.columns.find(c => this.deduceStatus(c) === 'TODO') || this.columns[0];
+              todoCol.tasks.push(task);
+            } else {
+              const inProgCol = this.columns.find(c => this.deduceStatus(c) === 'IN_PROGRESS') || this.columns[Math.min(1, this.columns.length - 1)];
+              inProgCol.tasks.push(task);
+            }
           }
         });
       },
-      error: (err: any) => console.error(err)
+      error: (err: any) => console.error('Erro ao carregar tarefas', err)
     });
   }
 
@@ -173,7 +194,7 @@ export class KanbanBoardComponent implements OnInit, OnChanges {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      const task: any = event.previousContainer.data[event.previousIndex];
+      const task: Task = event.previousContainer.data[event.previousIndex];
 
       transferArrayItem(
         event.previousContainer.data,
@@ -182,15 +203,21 @@ export class KanbanBoardComponent implements OnInit, OnChanges {
         event.currentIndex,
       );
 
-      // Map column to status (default columns keep status enum)
-      let newStatus = '';
-      if (targetColumn.name === 'A Fazer') newStatus = 'TODO';
-      else if (targetColumn.name === 'Em Andamento') newStatus = 'IN_PROGRESS';
-      else if (targetColumn.name === 'Concluído') newStatus = 'DONE';
-      else newStatus = 'IN_PROGRESS'; // custom columns default to IN_PROGRESS
+      const newStatus = this.deduceStatus(targetColumn);
+      const columnId = targetColumn.id > 0 ? targetColumn.id : undefined;
 
-      this.taskService.changeStatus(this.projectId, task.id, newStatus, `Movido para "${targetColumn.name}"`).subscribe({
-        next: () => {},
+      this.taskService.changeStatus(
+        this.projectId,
+        task.id,
+        newStatus,
+        columnId,
+        `Movido para "${targetColumn.name}"`
+      ).subscribe({
+        next: (updatedTask: Task) => {
+          task.status = updatedTask.status;
+          task.kanbanColumnId = updatedTask.kanbanColumnId;
+          task.kanbanColumnName = updatedTask.kanbanColumnName;
+        },
         error: (err: any) => {
           transferArrayItem(
             event.container.data,
