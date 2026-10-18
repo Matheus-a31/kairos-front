@@ -49,6 +49,19 @@
   margin-bottom: 40px;
 }
 
+.brand-logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.brand-logo {
+  height: 52px;
+  max-width: 220px;
+  object-fit: contain;
+}
+
 .logo {
   font-family: 'Inter', sans-serif;
   font-weight: 800;
