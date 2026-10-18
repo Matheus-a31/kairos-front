@@ -5,6 +5,9 @@
     <mat-icon matSuffix>search</mat-icon>
   </mat-form-field>
   <div style="display:flex;gap:8px;">
+    <button mat-stroked-button (click)="openTagManagementDialog()" matTooltip="Gerenciar tags do projeto">
+      <mat-icon>label</mat-icon> Tags
+    </button>
     <button mat-stroked-button (click)="openColumnDialog()" matTooltip="Adicionar nova coluna">
       <mat-icon>view_column</mat-icon> Nova Coluna
     </button>
@@ -45,9 +48,16 @@
       class="task-list" (cdkDropListDropped)="drop($event, column)">
 
       <mat-card class="task-card" *ngFor="let task of column.tasks" cdkDrag (click)="openTaskDialog(task)">
-        <mat-card-header>
-          <mat-card-title>{{ task.title }}</mat-card-title>
-          <mat-card-subtitle>{{ task.assigneeName || 'Não atribuído' }}</mat-card-subtitle>
+        <mat-card-header style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%;">
+          <div style="flex: 1; overflow: hidden; padding-right: 4px;">
+            <mat-card-title>{{ task.title }}</mat-card-title>
+            <mat-card-subtitle>{{ task.assigneeName || 'Não atribuído' }}</mat-card-subtitle>
+          </div>
+          <button mat-icon-button color="warn" (click)="deleteTask($event, task)" matTooltip="Excluir tarefa"
+            style="width: 26px; height: 26px; line-height: 26px; margin-top: -6px; margin-right: -6px; opacity: 0.65;"
+            class="card-delete-btn">
+            <mat-icon style="font-size: 16px; width: 16px; height: 16px;">delete</mat-icon>
+          </button>
         </mat-card-header>
         <mat-card-content>
           <div class="card-meta">
