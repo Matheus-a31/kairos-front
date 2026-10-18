@@ -14,6 +14,8 @@ export interface Task {
   assigneeId?: number;
   assigneeName?: string;
   tags: Tag[];
+  kanbanColumnId?: number;
+  kanbanColumnName?: string;
   createdAt: string;
   updatedAt?: string;
 }
