@@ -126,3 +126,12 @@
   border-radius: 12px;
   white-space: nowrap;
 }
+
+.card-delete-btn {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.card-delete-btn:hover {
+  opacity: 1 !important;
+  transform: scale(1.1);
+}
