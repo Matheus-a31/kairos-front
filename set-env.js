@@ -3,17 +3,19 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const apiUrl = process.env.API_URL || '';
 const isProduction = process.env.NODE_ENV === 'production';
-const targetPath = isProduction
-  ? './src/environments/environment.prod.ts'
-  : './src/environments/environment.ts';
 
-const envConfigFile = `export const environment = {
-  production: ${isProduction},
-  apiUrl: '${process.env.API_URL || ''}'
+const envConfigFile = (prod) => `export const environment = {
+  production: ${prod},
+  apiUrl: '${apiUrl}'
 };
 `;
 
 fs.mkdirSync('./src/environments', { recursive: true });
-fs.writeFileSync(targetPath, envConfigFile);
-console.log(`Environment variables generated at ${targetPath}`);
+
+// Always write both environment.ts and environment.prod.ts to guarantee apiUrl is loaded
+fs.writeFileSync('./src/environments/environment.ts', envConfigFile(false));
+fs.writeFileSync('./src/environments/environment.prod.ts', envConfigFile(true));
+
+console.log(`Environment variables generated: API_URL='${apiUrl}'`);
