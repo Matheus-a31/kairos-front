@@ -1,4 +1,4 @@
-<button mat-icon-button [matMenuTriggerFor]="notificationMenu" (menuOpened)="onMenuOpened()" class="bell-btn" [matBadge]="notificationService.unreadCount() > 0 ? notificationService.unreadCount() : null" matBadgeColor="warn" matBadgeSize="small">
+<button mat-icon-button [matMenuTriggerFor]="notificationMenu" (menuOpened)="onMenuOpened()" class="bell-btn" [matBadge]="notificationService.unreadCount()" [matBadgeHidden]="notificationService.unreadCount() === 0" matBadgeColor="warn" matBadgeSize="small">
   <mat-icon>notifications</mat-icon>
 </button>
 

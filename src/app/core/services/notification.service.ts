@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { Notification } from '../models/notification.model';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
@@ -9,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class NotificationService {
-  private apiUrl = `${environment.apiUrl}/notifications`;
+  private apiUrl = '/api/notifications';
 
   // Signals para manter estado global na aplicação
   unreadCount = signal<number>(0);
@@ -18,9 +17,14 @@ export class NotificationService {
   constructor(private http: HttpClient) {}
 
   loadNotifications() {
-    this.http.get<Notification[]>(this.apiUrl).subscribe(data => {
-      this.notifications.set(data);
-      this.updateUnreadCount(data);
+    this.http.get<Notification[]>(this.apiUrl).subscribe({
+      next: (data) => {
+        this.notifications.set(data);
+        this.updateUnreadCount(data);
+      },
+      error: (err) => {
+        console.error('Erro ao carregar notificações:', err);
+      }
     });
   }
 
