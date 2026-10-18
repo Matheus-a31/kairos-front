@@ -14,6 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TaskFormDialogComponent } from '../task-form-dialog/task-form-dialog.component';
 import { ColumnFormDialogComponent } from '../column-form-dialog/column-form-dialog.component';
+import { TagManagementDialogComponent } from '../tag-management-dialog/tag-management-dialog.component';
 
 interface KanbanColumn {
   id: number;
@@ -154,6 +155,32 @@ export class KanbanBoardComponent implements OnInit, OnChanges {
     const input = event.target as HTMLInputElement;
     this.searchQuery = input.value;
     this.loadTasks();
+  }
+
+  openTagManagementDialog() {
+    const dialogRef = this.dialog.open(TagManagementDialogComponent, {
+      width: '520px',
+      data: { projectId: this.projectId }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      this.loadTasks();
+    });
+  }
+
+  deleteTask(event: MouseEvent, task: Task) {
+    event.stopPropagation();
+    if (!confirm(`Tem certeza que deseja excluir a tarefa "${task.title}"?`)) return;
+
+    this.taskService.deleteTask(this.projectId, task.id).subscribe({
+      next: () => {
+        this.snackBar.open('Tarefa excluída com sucesso!', 'Ok', { duration: 3000 });
+        this.loadTasks();
+      },
+      error: (err: any) => {
+        console.error('Erro ao excluir tarefa', err);
+        this.snackBar.open(err.error?.message || 'Erro ao excluir tarefa', 'Fechar', { duration: 3000 });
+      }
+    });
   }
 
   openTaskDialog(task?: Task) {

@@ -54,6 +54,10 @@ export class TaskService {
     return this.http.post<Tag>(`/api/projects/${projectId}/tags`, { name, color });
   }
 
+  updateTag(projectId: number, tagId: number, name: string, color: string): Observable<Tag> {
+    return this.http.put<Tag>(`/api/projects/${projectId}/tags/${tagId}`, { name, color });
+  }
+
   deleteTag(projectId: number, tagId: number): Observable<void> {
     return this.http.delete<void>(`/api/projects/${projectId}/tags/${tagId}`);
   }
