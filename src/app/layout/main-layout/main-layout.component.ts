@@ -15,7 +15,7 @@ import { MatListModule } from '@angular/material/list';
     <mat-sidenav-container class="layout-container" id="app-root">
       <!-- Sidebar is expanded by default (opened=true, mode="side") -->
       <mat-sidenav #sidenav mode="side" opened id="main-sidebar">
-        <mat-toolbar color="primary">Kairos</mat-toolbar>
+        <mat-toolbar color="primary">Prumo</mat-toolbar>
         <mat-nav-list>
           <a mat-list-item href="#">
             <mat-icon matListItemIcon>dashboard</mat-icon>
