@@ -1,0 +1,119 @@
+<div class="dialog-header">
+  <h2 mat-dialog-title>
+    <mat-icon class="header-icon">label</mat-icon> Gerenciar Tags do Projeto
+  </h2>
+  <button mat-icon-button (click)="onClose()" matTooltip="Fechar">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<mat-dialog-content class="dialog-body">
+
+  <!-- Formulário de Criação -->
+  <div class="card-section">
+    <h3 class="section-title">Criar Nova Tag</h3>
+    <form [formGroup]="createForm" (ngSubmit)="onCreateTag()" class="create-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="flex-grow">
+          <mat-label>Nome da Tag</mat-label>
+          <input matInput formControlName="name" placeholder="Ex: Backend, Bug, Urgente">
+          <mat-error *ngIf="createForm.get('name')?.hasError('required')">Nome é obrigatório</mat-error>
+          <mat-error *ngIf="createForm.get('name')?.hasError('maxlength')">Máximo de 50 caracteres</mat-error>
+        </mat-form-field>
+
+        <div class="color-picker-box">
+          <label class="color-label">Cor</label>
+          <div class="color-picker-wrapper">
+            <span class="color-preview" [style.background-color]="createForm.get('color')?.value"></span>
+            <input type="color" formControlName="color" class="color-input">
+          </div>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="createForm.invalid || isLoading" class="add-button">
+          <mat-icon>add</mat-icon> Adicionar
+        </button>
+      </div>
+
+      <!-- Paleta rápida de cores -->
+      <div class="preset-palette">
+        <span class="preset-label">Cores sugeridas:</span>
+        <div class="palette-dots">
+          <button type="button" *ngFor="let c of colorPresets" class="palette-dot"
+                  [style.background-color]="c"
+                  [class.selected]="createForm.get('color')?.value === c"
+                  (click)="selectCreatePreset(c)"
+                  [matTooltip]="c">
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista de Tags Existentes -->
+  <div class="card-section">
+    <h3 class="section-title">
+      Tags Existentes ({{ tags.length }})
+    </h3>
+
+    <div *ngIf="tags.length === 0 && !isLoading" class="empty-state">
+      <mat-icon class="empty-icon">loyalty</mat-icon>
+      <p>Nenhuma tag cadastrada ainda. Crie sua primeira tag acima!</p>
+    </div>
+
+    <div class="tag-list" *ngIf="tags.length > 0">
+      <div *ngFor="let tag of tags" class="tag-item">
+        
+        <!-- Modo Normal de Visualização -->
+        <ng-container *ngIf="editingTagId !== tag.id">
+          <div class="tag-badge" [style.background-color]="tag.color" [style.color]="getContrastColor(tag.color)">
+            {{ tag.name }}
+          </div>
+          <div class="tag-actions">
+            <button mat-icon-button (click)="startEditing(tag)" matTooltip="Editar tag" class="action-btn">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="onDeleteTag(tag)" matTooltip="Excluir tag" class="action-btn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- Modo de Edição Inline -->
+        <ng-container *ngIf="editingTagId === tag.id">
+          <form [formGroup]="editForm" (ngSubmit)="onSaveEdit(tag.id)" class="edit-form-inline">
+            <mat-form-field appearance="outline" class="edit-input">
+              <input matInput formControlName="name" placeholder="Nome da tag">
+            </mat-form-field>
+
+            <div class="color-picker-wrapper small">
+              <span class="color-preview" [style.background-color]="editForm.get('color')?.value"></span>
+              <input type="color" formControlName="color" class="color-input">
+            </div>
+
+            <div class="palette-dots mini">
+              <button type="button" *ngFor="let c of colorPresets" class="palette-dot mini"
+                      [style.background-color]="c"
+                      (click)="selectEditPreset(c)">
+              </button>
+            </div>
+
+            <div class="inline-buttons">
+              <button mat-icon-button color="primary" type="submit" [disabled]="editForm.invalid || isLoading" matTooltip="Salvar">
+                <mat-icon>check</mat-icon>
+              </button>
+              <button mat-icon-button type="button" (click)="cancelEditing()" matTooltip="Cancelar">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          </form>
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+  <button mat-flat-button color="primary" (click)="onClose()">Concluir</button>
+</mat-dialog-actions>
