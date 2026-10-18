@@ -36,8 +36,8 @@ export class TaskService {
     return this.http.put<Task>(`/api/projects/${projectId}/tasks/${taskId}`, request);
   }
 
-  changeStatus(projectId: number, taskId: number, status: string, comment?: string): Observable<Task> {
-    return this.http.patch<Task>(`/api/projects/${projectId}/tasks/${taskId}/status`, { status, comment });
+  changeStatus(projectId: number, taskId: number, status?: string, columnId?: number, comment?: string): Observable<Task> {
+    return this.http.patch<Task>(`/api/projects/${projectId}/tasks/${taskId}/status`, { status, columnId, comment });
   }
 
   deleteTask(projectId: number, taskId: number): Observable<void> {
