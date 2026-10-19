@@ -31,8 +31,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Handle 401 errors (Unauthorized - token expired)
-      if (error.status === 401 && !req.url.includes('/auth/login') && !req.url.includes('/auth/refresh')) {
+      // Handle 401 (Unauthorized) and 403 (Forbidden) errors on protected endpoints
+      const isAuthUrl = req.url.includes('/auth/login') || req.url.includes('/auth/refresh') || req.url.includes('/auth/register');
+      if ((error.status === 401 || error.status === 403) && !isAuthUrl) {
+        if (!authService.getRefreshToken()) {
+          authService.logout(router.url);
+          return throwError(() => error);
+        }
+
         return authService.refreshToken().pipe(
           switchMap(response => {
             const newReq = req.clone({
@@ -41,7 +47,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
             return next(newReq);
           }),
           catchError(refreshError => {
-            authService.logout();
+            authService.logout(router.url);
             return throwError(() => refreshError);
           })
         );
@@ -50,3 +56,4 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
+
