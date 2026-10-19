@@ -23,11 +23,19 @@ export class AuthService {
     return this.http.post<void>(`${this.apiUrl}/register`, data);
   }
 
-  logout() {
+  logout(returnUrl?: string) {
+    this.clearSession();
+    if (returnUrl) {
+      this.router.navigate(['/auth/login'], { queryParams: { returnUrl } });
+    } else {
+      this.router.navigate(['/auth/login']);
+    }
+  }
+
+  clearSession() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     this.isAuthenticatedSignal.set(false);
-    this.router.navigate(['/auth/login']);
   }
 
   private setSession(authResult: AuthResponse) {
@@ -44,11 +52,47 @@ export class AuthService {
     return localStorage.getItem('refresh_token');
   }
 
-  hasToken(): boolean {
-    return !!this.getToken();
+  isTokenExpired(token: string | null): boolean {
+    if (!token) return true;
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return true;
+      const base64Url = parts[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+      const decoded = JSON.parse(jsonPayload);
+      if (!decoded.exp) return false;
+      return Date.now() >= decoded.exp * 1000;
+    } catch {
+      return true;
+    }
   }
 
-  isAuthenticated() {
+  hasToken(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+    if (this.isTokenExpired(token)) {
+      const refreshToken = this.getRefreshToken();
+      if (!refreshToken || this.isTokenExpired(refreshToken)) {
+        this.clearSession();
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isAuthenticated(): boolean {
+    if (!this.hasToken()) {
+      if (this.isAuthenticatedSignal()) {
+        this.isAuthenticatedSignal.set(false);
+      }
+      return false;
+    }
     return this.isAuthenticatedSignal();
   }
 
@@ -59,3 +103,4 @@ export class AuthService {
     );
   }
 }
+
