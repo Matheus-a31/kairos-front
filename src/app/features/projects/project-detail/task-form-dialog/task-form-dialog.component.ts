@@ -133,12 +133,22 @@ export class TaskFormDialogComponent implements OnInit {
     const rawDueDate = this.taskForm.value.dueDate;
     let formattedDueDate: string | null = null;
     if (rawDueDate) {
-      const d = new Date(rawDueDate);
-      if (!isNaN(d.getTime())) {
-        const year = d.getFullYear();
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const day = String(d.getDate()).padStart(2, '0');
+      if (rawDueDate instanceof Date) {
+        const year = rawDueDate.getFullYear();
+        const month = String(rawDueDate.getMonth() + 1).padStart(2, '0');
+        const day = String(rawDueDate.getDate()).padStart(2, '0');
         formattedDueDate = `${year}-${month}-${day}`;
+      } else if (typeof rawDueDate === 'string') {
+        if (rawDueDate.includes('/')) {
+          const parts = rawDueDate.split('/');
+          if (parts.length === 3) {
+            let year = Number(parts[2]);
+            if (year < 100) year += 2000;
+            formattedDueDate = `${year}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+          }
+        } else {
+          formattedDueDate = rawDueDate;
+        }
       }
     }
     request.dueDate = formattedDueDate;

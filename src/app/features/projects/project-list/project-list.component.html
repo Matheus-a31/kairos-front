@@ -37,8 +37,16 @@
           <mat-card-header style="padding: 20px 20px 0 20px; display: flex; justify-content: space-between; width: 100%; box-sizing: border-box;">
             <div style="flex: 1;">
               <mat-card-title style="font-size: 1.25rem; font-weight: 700; color: #1e293b; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
-                {{ project.name }}
-                <span class="status-badge" [ngClass]="project.status.toLowerCase()">{{ project.status }}</span>
+                <span>{{ project.name }}</span>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span class="status-badge" [ngClass]="project.status.toLowerCase()">{{ project.status }}</span>
+                  <button mat-icon-button color="warn" (click)="deleteProject($event, project)"
+                          [disabled]="project.status === 'COMPLETED'"
+                          [matTooltip]="project.status === 'COMPLETED' ? 'Projetos concluídos não podem ser excluídos.' : 'Excluir projeto'"
+                          style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
+                    <mat-icon style="font-size: 18px; width: 18px; height: 18px;">delete_outline</mat-icon>
+                  </button>
+                </div>
               </mat-card-title>
               <mat-card-subtitle style="color: #64748b; font-size: 0.9rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 16px; min-height: 2.8em;">
                 {{ project.description || 'Sem descrição' }}

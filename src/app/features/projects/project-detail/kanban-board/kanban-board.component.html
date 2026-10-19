@@ -62,7 +62,7 @@
         <mat-card-content>
           <div class="card-meta">
             <span class="priority-badge" [ngClass]="task.priority.toLowerCase()">{{ task.priority }}</span>
-            <span class="due-date" *ngIf="task.dueDate"> {{ task.dueDate | date:'dd/MM' }}</span>
+            <span class="due-date" *ngIf="task.dueDate"> {{ task.dueDate | date:'dd/MM/yy' }}</span>
           </div>
           <div class="tag-list" *ngIf="task.tags && task.tags.length > 0">
             <span class="tag-chip" *ngFor="let tag of task.tags" [style.background-color]="tag.color"

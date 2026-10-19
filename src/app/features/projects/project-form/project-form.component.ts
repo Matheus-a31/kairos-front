@@ -57,15 +57,27 @@ export class ProjectFormComponent {
     const projectRequest: ProjectRequest = { ...this.projectForm.value };
 
     // Format dates to YYYY-MM-DD
-    const startDateVal = this.projectForm.value.startDate;
-    if ((startDateVal as any) instanceof Date) {
-      projectRequest.startDate = (startDateVal as any).toISOString().split('T')[0];
-    }
-    
-    const endDateVal = this.projectForm.value.endDate;
-    if ((endDateVal as any) instanceof Date) {
-      projectRequest.endDate = (endDateVal as any).toISOString().split('T')[0];
-    }
+    const formatDate = (val: any): string => {
+      if (!val) return '';
+      if (val instanceof Date) {
+        const year = val.getFullYear();
+        const month = String(val.getMonth() + 1).padStart(2, '0');
+        const day = String(val.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+      if (typeof val === 'string' && val.includes('/')) {
+        const parts = val.split('/');
+        if (parts.length === 3) {
+          let year = Number(parts[2]);
+          if (year < 100) year += 2000;
+          return `${year}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        }
+      }
+      return val;
+    };
+
+    projectRequest.startDate = formatDate(this.projectForm.value.startDate);
+    projectRequest.endDate = formatDate(this.projectForm.value.endDate);
 
     if (this.isEditMode) {
       this.projectService.updateProject(this.data.id, projectRequest).subscribe({
