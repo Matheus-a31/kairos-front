@@ -4,6 +4,16 @@ O **Prumo** é uma plataforma moderna e intuitiva de gerenciamento de projetos e
 
 Este é o frontend da aplicação, construído utilizando **Angular 18** e **Angular Material**, oferecendo uma interface reativa, componentes modulares e uma excelente experiência de usuário.
 
+<img width="1180" height="810" alt="Screenshot 2026-10-18 at 21-55-55 Prumo" src="https://github.com/user-attachments/assets/41b7c875-4ea4-4009-9b4d-59075b7c5fa8" />
+
+<img width="1828" height="697" alt="Screenshot 2026-10-18 at 21-59-10 Prumo" src="https://github.com/user-attachments/assets/b93e7152-d963-44a2-82a6-f0f532d3687d" />
+
+
+<img width="1813" height="776" alt="Screenshot 2026-10-18 at 21-57-33 Prumo" src="https://github.com/user-attachments/assets/0a2c2501-3cad-4afb-999c-53b4b40ac621" />
+
+
+
+
 ## Pré-requisitos
 
 - **Node.js** (v18 ou superior recomendado)
