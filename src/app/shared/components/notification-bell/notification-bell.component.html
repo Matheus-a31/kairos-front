@@ -30,7 +30,7 @@
       
       <div class="notification-content">
         <p class="message">{{ notification.message }}</p>
-        <span class="time">{{ notification.createdAt | date:'short' }}</span>
+        <span class="time">{{ notification.createdAt | date:'dd/MM/yy HH:mm' }}</span>
       </div>
       
       <div class="unread-indicator" *ngIf="!notification.isRead"></div>

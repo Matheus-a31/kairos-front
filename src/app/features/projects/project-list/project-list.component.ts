@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { ProjectFormComponent } from '../project-form/project-form.component';
 import { NotificationBellComponent } from '../../../shared/components/notification-bell/notification-bell.component';
@@ -28,6 +30,8 @@ import { NotificationBellComponent } from '../../../shared/components/notificati
     MatInputModule,
     MatDialogModule,
     MatCardModule,
+    MatSnackBarModule,
+    MatTooltipModule,
     NotificationBellComponent,
     FormsModule
   ],
@@ -45,7 +49,8 @@ export class ProjectListComponent implements OnInit {
 
   constructor(
     private projectService: ProjectService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -83,6 +88,30 @@ export class ProjectListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadProjects(); // Reload list if project was created
+      }
+    });
+  }
+
+  deleteProject(event: Event, project: Project) {
+    event.stopPropagation();
+
+    if (project.status === 'COMPLETED') {
+      this.snackBar.open('Projetos concluídos não podem ser excluídos.', 'Fechar', { duration: 4000 });
+      return;
+    }
+
+    if (!confirm(`Tem certeza que deseja excluir o projeto "${project.name}" permanentemente?`)) {
+      return;
+    }
+
+    this.projectService.deleteProject(project.id).subscribe({
+      next: () => {
+        this.snackBar.open('Projeto excluído com sucesso!', 'Fechar', { duration: 3000 });
+        this.loadProjects();
+      },
+      error: (err) => {
+        const errorMsg = err.error?.message || 'Erro ao excluir projeto.';
+        this.snackBar.open(errorMsg, 'Fechar', { duration: 4000 });
       }
     });
   }
